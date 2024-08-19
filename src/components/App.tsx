@@ -1,23 +1,19 @@
 import { Field, Textarea } from '@headlessui/react'
-import { ComponentProps, FC, Fragment, useEffect } from 'react'
+import { ComponentProps, FC, Fragment } from 'react'
 import { cn } from '../lib/util'
 import { useApp } from '../lib/useApp'
 import { Highlight } from './Highlight'
 
-const proteins = [
-  'Q9Y7B1',
-  'A0A1B2J9U2',
-  'C1PHG1',
-  'A0A1B2JAX1',
-  'A0A1B2J5Q5',
-].map(e => e)
+// const proteins = [
+//   'Q9Y7B1',
+//   'A0A1B2J9U2',
+//   'C1PHG1',
+//   'A0A1B2JAX1',
+//   'A0A1B2J5Q5',
+// ].map(e => e)
 
 export function App() {
   const [state, commands] = useApp()
-
-  useEffect(() => {
-    commands.changeInput(proteins.join('\n') + '\n')
-  }, [commands])
 
   const value = (() => {
     const keys = state.input.fastas.keys()
