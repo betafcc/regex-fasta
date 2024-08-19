@@ -1,5 +1,7 @@
 import { Field, Textarea } from '@headlessui/react'
-import { ComponentProps, FC, Fragment } from 'react'
+import { LinkIcon } from '@heroicons/react/24/solid'
+import { ComponentProps, FC, Fragment, useEffect } from 'react'
+
 import { cn } from '../lib/util'
 import { useApp } from '../lib/useApp'
 import { Highlight } from './Highlight'
@@ -15,6 +17,22 @@ import { Highlight } from './Highlight'
 export function App() {
   const [state, commands] = useApp()
 
+  useEffect(() => {
+    const qs = new URLSearchParams(window.location.search)
+    const keys = qs.get('keys')
+    const pattern = qs.get('pattern')
+
+    if (keys) {
+      commands.changeInput(keys.split('-').join('\n') + '\n')
+    }
+
+    if (pattern) {
+      commands.changePattern(pattern)
+    }
+
+    window.history.replaceState({}, '', window.location.href.split('?')[0])
+  }, [])
+
   const value = (() => {
     const keys = state.input.fastas.keys()
     switch (state.input.type) {
@@ -29,14 +47,27 @@ export function App() {
   return (
     <div className="flex flex-row h-screen">
       <SidePannel>
-        <Field>
+        <Field className="flex mb-2 relative">
           <input
             type="text"
-            className="w-full text-white bg-gray-700 p-2 mb-2 rounded-lg"
+            className="flex-1 text-white bg-gray-700 p-2 rounded-lg"
             placeholder="Pattern"
             value={state.pattern.input}
             onChange={e => commands.changePattern(e.target.value)}
           />
+          <button
+            className="absolute flex items-center right-0 p-2"
+            onClick={() => {
+              const keys = state.input.fastas.keys()
+              const pattern = state.pattern.input
+              const href = window.location.href.replace(/\?.*$/, '')
+              const qs = new URLSearchParams({ pattern, keys: keys.join('-') })
+
+              navigator.clipboard.writeText(`${href}?${qs}`)
+            }}
+          >
+            <LinkIcon className="size-6 text-white" />
+          </button>
         </Field>
         <Field className="flex flex-col flex-1">
           <div className="overflow-y-auto h-full">
