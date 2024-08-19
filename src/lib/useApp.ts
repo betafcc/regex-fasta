@@ -158,19 +158,15 @@ export const useApp = (initialState: State = initial) => {
           })
 
           for (const accession of notCached) {
-            console.log('fetching', accession)
             Fasta.get(accession)
-              .then(fasta => {
-                console.log('fetched', fasta)
-                dispatch({ type: 'ProteinFetched', fasta })
-              })
-              .catch(() => {
+              .then(fasta => dispatch({ type: 'ProteinFetched', fasta }))
+              .catch(() =>
                 dispatch({
                   type: 'ProteinFetchFailed',
                   accession,
                   message: 'failed to load',
-                })
-              })
+                }),
+              )
           }
         },
         [state.input.fastas],
