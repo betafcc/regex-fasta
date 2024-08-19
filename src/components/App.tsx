@@ -1,5 +1,5 @@
 import { Field, Textarea } from '@headlessui/react'
-import { ComponentProps, FC, Fragment } from 'react'
+import { ComponentProps, FC, Fragment, useEffect } from 'react'
 import { cn } from '../lib/util'
 import { useApp } from '../lib/useApp'
 import { Highlight } from './Highlight'
@@ -14,6 +14,10 @@ const proteins = [
 
 export function App() {
   const [state, commands] = useApp()
+
+  useEffect(() => {
+    commands.changeInput(proteins.join('\n') + '\n')
+  }, [commands])
 
   const value = (() => {
     const keys = state.input.fastas.keys()
