@@ -57,7 +57,14 @@ export type Event =
 export const reduce: Reducer<State, Event> = (state, event) => {
   switch (event.type) {
     case 'PatternChanged': {
-      const regex = event.input ? new RegExp(event.input, 'g') : null
+      let regex: RegExp | null = null
+      if (event.input) {
+        try {
+          regex = new RegExp(event.input, 'g')
+        } catch {
+          // ignore
+        }
+      }
       return {
         ...state,
         pattern: {
